@@ -27,7 +27,7 @@ def predict(neighbors):
     k = len(neighbors)
     return {size : value / k * 100 for size, value in allSize.items()}
 
-def main ():
+def main (): 
     data_male = pd.read_csv ('../male.csv')
     data_femal = pd.read_csv ('C:\size4all\female.csv')
 

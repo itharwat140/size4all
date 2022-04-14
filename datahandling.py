@@ -22,19 +22,19 @@ def prepare_data (df, file_name):
         out_file.write('Age, Weight, Height, Size, Chest\n')
         for i in range(len(ages)):
             chest = chests[i]
-            if chest < 84:
+            if chest < 76:
                 size = 'xxs'
-            elif chest < 90:
+            elif chest < 86:
                 size = 'xs'
-            elif chests < 95:
+            elif chests < 97:
                 size = 's'
-            elif chest < 102:
+            elif chest < 107:
                 size = 'M'
-            elif chest < 112:
+            elif chest < 116:
                 size = 'L'
-            elif chest < 123:
+            elif chest < 122:
                 size = 'XL'
-            elif chest < 133:
+            elif chest < 128:
                 size = 'xxl'
             else:
                 size = 'XXXL'
