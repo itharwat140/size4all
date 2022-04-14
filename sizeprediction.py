@@ -1,62 +1,57 @@
-from dis import dis
-from unittest import result
 import pandas as pd
-from math import dist, sqrt
-from datahandling import main
+from math import sqrt
 from sklearn.neighbors import KNeighborsClassifier
 
-def get_neighbors (k, height, weight, data_source):
-    dists= []
-    for point in data_source:
-        x = point [1]
-        y = point [2]
-        size = point [3]
+def get_neighbours(k, height, weight, data_list):
+    dists = []
+    for point in data_list:
+        x = point[2]
+        y = point[1]
+        size = point[4]
         dist = sqrt((weight-x)**2 + (height-y)**2)
-        dists.append({'dist' : dist, 'size' : size})
-    dists.sort(key = lambda d: d['dist'])
+        dists.append({'dist': dist, 'size': size})
+
+    dists.sort(key=lambda d: d['dist'])
     return dists[:k]
 
-def predict(neighbors):
-    allSize = {}
-    for dist_item in neighbors:
-        size = dist_item ['size']
-        if size in allSize:
-            allSize [size] += 1
-            else:
-                allSize [size] = 1
-    k = len(neighbors)
-    return {size : value / k * 100 for size, value in allSize.items()}
+def predict(neighbours):
+    sizes = {}
+    for dist_item in neighbours:
+        size = dist_item['size']
+        if size in sizes:
+            sizes[size] += 1
+        else:
+            sizes[size] = 1
 
-def main (): 
-    data_male = pd.read_csv ('../male.csv')
-    data_femal = pd.read_csv ('C:\size4all\female.csv')
+    k = len(neighbours)
+    return {size: value / k * 100 for size, value in sizes.items()}
 
-    df = data_male.values.tolist() + data_male.values.tolist()
 
+def main():
+    data_female = pd.read_csv('sorted_female_db.csv')
+    data_male = pd.read_csv('sorted_male_db.csv')
+
+    df = data_female.values.tolist() + data_male.values.tolist()
     n = int(sqrt(len(df)))
     k_values = [3, 5, 7, 9, 11, n]
+    height = int(input('How tall are you?  '))
+    weight = int(input('How much do you weight?  '))
 
-    height = int (input('How tall are you?   '))
-    Weight = int (input('How fat are you?    '))
-
-    for k in K_values:
-        neighbours = get_neighbors(k, weight, height, df)
-        result = predict(neighbors)
-        print(f'I think you should buy a shirt size : (k={k}')
+    for k in k_values:
+        neighbours = get_neighbours(k, height, weight, df)
+        result = predict(neighbours)
+        print(f'you should buy a shirt size: (k={k})')
         for size, proc in result.items():
-            print (f\t{size} with a confidence of {proc :.2f}%')
+            print(f'\t{size} with a confidence of {proc :.2f}%')
         print('-'*40)
-        weights = [data[1] for data in df]
-        heights = [data[2] for data in df]
-        labels = [data [4] for data in df]
+        heights = [data[1] for data in df]
+        weights = [data[2] for data in df]
+        labels = [data[4] for data in df]
         data = list(zip(weights, heights))
-        knn_model = KNeighborsClassifier(n_neighbors = k)
+        knn_model = KNeighborsClassifier(n_neighbors=k)
         knn_model.fit(data, labels)
         print(f'sklearn predicted: {knn_model.predict([[weight, height]])} for k={k}')
+        print('-'*40)
 
 if __name__ == '__main__':
     main()
-
-
-
-
